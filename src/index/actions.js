@@ -39,10 +39,8 @@ export function setIsLoadingCityData(isLoadingCityData) {
 
 // 异步action,要获取当前值,计算最新的值
 export function toggleHighSpeed() {
-
   return (dispatch, getState) => {
     const { highSpeed } = getState();
-    console.log(highSpeed)
     dispatch({
       type: ACTION_SET_HIGHSPEED,
       payload: !highSpeed

@@ -82,7 +82,6 @@ export default {
   },
   highSpeed(state = false, action) {
       const { type, payload } = action;
-      console.log(payload,'===payload')
       switch (type) {
           case ACTION_SET_HIGHSPEED:
               return payload;

@@ -12,10 +12,10 @@ export default createStore(
         from: null,
         to: null,
         departDate: dateFormat(Date.now()),
-        highSpeed: false,
+        highSpeed: false, // 高铁
         trainList: [],  // 火车列表
-        orderType: ORDER_DEPART,
-        onlyTickets: false,
+        orderType: ORDER_DEPART,  // 出发/耗时
+        onlyTickets: false,  // 只看有票
         ticketTypes: [],  // 座位类型
         checkedTicketTypes: {},
         trainTypes: [],  // 火车类型
@@ -28,7 +28,7 @@ export default createStore(
         departTimeEnd: 24,
         arriveTimeStart: 0,
         arriveTimeEnd: 24,
-        isFiltersVisible: false,
+        isFiltersVisible: false,  // 只看筛选
         searchParsed: false,  // 解析url完成后请求list
     },
     applyMiddleware(thunk)

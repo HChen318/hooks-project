@@ -23,19 +23,19 @@ export default List
 
 
 const ListItem = memo(function ListItem(props) {
-  const { dTime, aTime, dStation, aStation, trainNumber, time, priceMsg } = props
+  const { dTime, aTime, dStation, aStation, trainNumber, time, priceMsg,date } = props
 
-  const urlString = useMemo(() => {
-    return new URI()
-      .setSearch("dStation", dStation)
-      .setSearch("aStation", aStation)
-      .setSearch("trainNumber", trainNumber)
-      .setSearch("date", time)
-      .toString()
-  }, [dStation, aStation, trainNumber, time])
+  const url = useMemo(() => {
+    return new URI('ticket.html')
+        .setSearch('aStation', aStation)
+        .setSearch('dStation', dStation)
+        .setSearch('trainNumber', trainNumber)
+        .setSearch('date', date)
+        .toString();
+}, [aStation, dStation, trainNumber, date]);
 
   return <li className="list-item">
-    <a href={urlString}>
+    <a href={url}>
       <span className="item-time">
         <em>{dTime}</em>
         <br />

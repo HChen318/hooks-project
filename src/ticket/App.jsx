@@ -53,7 +53,6 @@ function App(props) {
     dispatch(setDepartStation(dStation))
     dispatch(setArriveStation(aStation))
     dispatch(setTrainNumber(trainNumber))
-    console.log(dateFormat(date))
     dispatch(setDepartDate(dateFormat(date)))
     // 解析成功后发请求
     dispatch(setSearchParsed(true))
@@ -70,7 +69,6 @@ function App(props) {
       .toString();
 
     fetch(url).then(response => response.json()).then(res => {
-      console.log(res, '===res')
       const { candidates, detail: { arriveDate, arriveTimeStr, departTimeStr, durationStr } } = res
       dispatch(setArriveDate(arriveDate))
       dispatch(setArriveTimeStr(arriveTimeStr))
@@ -126,17 +124,20 @@ function App(props) {
         durationStr={durationStr}
         arriveTimeStr={arriveTimeStr}
         departTimeStr={departTimeStr}
-        {...detailCbs}
-      />
-      <Context.Provider value={{
-        trainNumber,
-        departStation,
-        arriveStation,
-        departDate,
-      }}>
-        <Candidate tickets={tickets} />
-      </Context.Provider>
+      >
+        <span className="left"></span>
+        <span className="schedule" onClick={() => detailCbs.toggleIsScheduleVisible()}>时刻表</span>
+        <span className="right"></span>
+      </Detail>
     </div>
+    <Context.Provider value={{
+      trainNumber,
+      departStation,
+      arriveStation,
+      departDate,
+    }}>
+      <Candidate tickets={tickets} />
+    </Context.Provider>
     {isScheduleVisible &&
       <div className="mask" onClick={() => dispatch(toggleIsScheduleVisible())}>
         {/* 异步组件  */}

@@ -100,10 +100,12 @@
   "lint-staged": {
     "*.{js,jsx}": [
       "prettier --write",
-      "eslint--fix"
+      "eslint--fix",
+      "git add"
     ],
     "*.{css,md}": [
-      "prettier --write"
+      "prettier --write",
+      "git add"
     ]
   },
   "browserslist": {

@@ -1,5 +1,4 @@
-
-import { dateFormat} from '../utils'
+import { dateFormat } from '../utils';
 export const ACTION_SET_DEPART_DATE = 'SET_DEPART_DATE';
 export const ACTION_SET_ARRIVE_DATE = 'SET_ARRIVE_DATE';
 export const ACTION_SET_DEPART_TIME_STR = 'SET_DEPART_TIME_STR';

@@ -77,10 +77,33 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "format": "prettier src/**/*.{js,jsx,css,md} --write && eslint src/**/*.{js,jsx} --fix"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "eslint:recommended",
+      "react-app"
+    ],
+    "rules": {
+      "react/jsx-indent": [
+        "error",
+        4
+      ]
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint--fix"
+    ],
+    "*.{css,md}": [
+      "prettier --write"
+    ]
   },
   "browserslist": {
     "production": [
@@ -148,5 +171,10 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5"
   }
 }

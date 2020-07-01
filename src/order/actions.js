@@ -101,8 +101,8 @@ export function setSearchParsed(searchParsed) {
 export function fetchInitial(url) {
     return (dispatch, getState) => {
         fetch(url)
-            .then(res => res.json())
-            .then(data => {
+            .then((res) => res.json())
+            .then((data) => {
                 const {
                     departTimeStr,
                     arriveTimeStr,
@@ -124,73 +124,71 @@ let passengerIdSeed = 0;
 
 export function createAdult() {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState()
+        const { passengers } = getState();
         // 添加第二个乘客之前信息需全部填写
         for (let item of passengers) {
-            let props = Object.keys(item)
+            let props = Object.keys(item);
             for (let key of props) {
                 if (!item[key]) return;
             }
         }
-        dispatch(setPassengers([
-            ...passengers,
-            {
-                id: ++passengerIdSeed,
-                name: '',
-                ticketType: 'adult', // 成人
-                licenceNo: '',
-                seat: 'Z'
-            }
-        ]))
-    }
+        dispatch(
+            setPassengers([
+                ...passengers,
+                {
+                    id: ++passengerIdSeed,
+                    name: '',
+                    ticketType: 'adult', // 成人
+                    licenceNo: '',
+                    seat: 'Z',
+                },
+            ])
+        );
+    };
 }
 
 export function createChild() {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState()
+        const { passengers } = getState();
 
-        let followAdultID = null
+        let followAdultID = null;
 
         // 添加第二个乘客之前信息需全部填写
         for (let item of passengers) {
-            let props = Object.keys(item)
+            let props = Object.keys(item);
             for (let key of props) {
                 if (!item[key]) return;
             }
             if (item.ticketType === 'adult') {
-                followAdultID = item.id
+                followAdultID = item.id;
             }
         }
-        if (!followAdultID) return alert('至少添加一位成人')
+        if (!followAdultID) return alert('至少添加一位成人');
 
-        dispatch(setPassengers([
-            ...passengers,
-            {
-                id: ++passengerIdSeed,
-                name: '',
-                ticketType: 'child', // 儿童
-                gender: '',
-                birthday: '',
-                followAdult: followAdultID,
-                seat: 'Z'
-            }
-        ]))
-    }
+        dispatch(
+            setPassengers([
+                ...passengers,
+                {
+                    id: ++passengerIdSeed,
+                    name: '',
+                    ticketType: 'child', // 儿童
+                    gender: '',
+                    birthday: '',
+                    followAdult: followAdultID,
+                    seat: 'Z',
+                },
+            ])
+        );
+    };
 }
 
 export function removePassenger(id) {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState();
+        const { passengers } = getState();
         // 同行儿童也删除
-        const newPassengers = passengers.filter(ele => {
-            return ele.id != id && ele.followAdult != id
-        })
+        const newPassengers = passengers.filter((ele) => {
+            return ele.id !== id && ele.followAdult !== id;
+        });
 
         dispatch(setPassengers(newPassengers));
     };
@@ -198,27 +196,30 @@ export function removePassenger(id) {
 
 export function updatePassenger(id, data, keysToBeRemoved = []) {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState();
+        const { passengers } = getState();
         passengers.some((ele, i) => {
             if (ele.id === id) {
-                let newPassengers = [...passengers]
-                newPassengers[i] = Object.assign({}, {
-                    ...ele
-                }, data)
-                keysToBeRemoved.forEach(item => {
-                    delete newPassengers[i][item]
-                })
-                dispatch(setPassengers(newPassengers))
-                return true
+                let newPassengers = [...passengers];
+                newPassengers[i] = Object.assign(
+                    {},
+                    {
+                        ...ele,
+                    },
+                    data
+                );
+                keysToBeRemoved.forEach((item) => {
+                    delete newPassengers[i][item];
+                });
+                dispatch(setPassengers(newPassengers));
+                return true;
             }
-        })
+            return true;
+        });
     };
 }
 
 export function showMenu(menu) {
-    return dispatch => {
+    return (dispatch) => {
         dispatch(setMenu(menu));
         dispatch(setIsMenuVisible(true));
     };
@@ -226,119 +227,138 @@ export function showMenu(menu) {
 
 export function showFollowAdultMenu(id) {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState();
+        const { passengers } = getState();
 
-        const passenger = passengers.find(passenger => passenger.id === id);
+        const passenger = passengers.find((passenger) => passenger.id === id);
         if (!passenger) {
             return;
         }
-        dispatch(showMenu({
-            onPress(followAdult) {
-                dispatch(updatePassenger(id, {
-                    followAdult
-                }))
-                dispatch(hideMenu())
-            },
-            // 过滤出成人乘客
-            options: passengers.filter(item => {
-                return item.ticketType === 'adult'
-            }).map(ele => {
-                return {
-                    title: ele.name,
-                    value: ele.id,
-                    active: ele.id === passenger.followAdult
-                }
+        dispatch(
+            showMenu({
+                onPress(followAdult) {
+                    dispatch(
+                        updatePassenger(id, {
+                            followAdult,
+                        })
+                    );
+                    dispatch(hideMenu());
+                },
+                // 过滤出成人乘客
+                options: passengers
+                    .filter((item) => {
+                        return item.ticketType === 'adult';
+                    })
+                    .map((ele) => {
+                        return {
+                            title: ele.name,
+                            value: ele.id,
+                            active: ele.id === passenger.followAdult,
+                        };
+                    }),
             })
-        }))
+        );
     };
 }
 
 export function showGenderMenu(id) {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState();
+        const { passengers } = getState();
 
-        const passenger = passengers.find(passenger => passenger.id === id);
+        const passenger = passengers.find((passenger) => passenger.id === id);
 
         if (!passenger) {
             return;
         }
-        dispatch(showMenu({
-            onPress(gender) {
-                dispatch(updatePassenger(id, {
-                    gender
-                }))
-                dispatch(hideMenu())
-            },
-            options: [{
-                    title: '男',
-                    value: 'male',
-                    active: 'male' === passenger.gender
+        dispatch(
+            showMenu({
+                onPress(gender) {
+                    dispatch(
+                        updatePassenger(id, {
+                            gender,
+                        })
+                    );
+                    dispatch(hideMenu());
                 },
-                {
-                    title: '女',
-                    value: 'female',
-                    active: 'female' === passenger.gender
-                }
-            ]
-        }))
+                options: [
+                    {
+                        title: '男',
+                        value: 'male',
+                        active: 'male' === passenger.gender,
+                    },
+                    {
+                        title: '女',
+                        value: 'female',
+                        active: 'female' === passenger.gender,
+                    },
+                ],
+            })
+        );
     };
 }
 
 export function showTicketTypeMenu(id) {
     return (dispatch, getState) => {
-        const {
-            passengers
-        } = getState();
+        const { passengers } = getState();
 
-        const passenger = passengers.find(passenger => passenger.id === id);
+        const passenger = passengers.find((passenger) => passenger.id === id);
 
         if (!passenger) {
             return;
         }
-        dispatch(showMenu({
-            onPress(ticketType) {
-                if (ticketType == 'adult') {
-                    dispatch(updatePassenger(id, {
-                        ticketType,
-                        licenceNo: '',
-                    }, ['gender', 'followAdult', 'birthday']))
-                } else {
-                    // 切换儿童, 找到其余乘客,看有没有成人. 有的话才能切换儿童
-                    const adult = passengers.find(passenger => passenger.id != id && passenger.ticketType === 'adult');
-                    if (adult) {
+        dispatch(
+            showMenu({
+                onPress(ticketType) {
+                    if (ticketType === 'adult') {
                         dispatch(
                             updatePassenger(
-                                id, {
+                                id,
+                                {
                                     ticketType,
-                                    gender: '',
-                                    followAdult: adult.id,
-                                    birthday: '',
+                                    licenceNo: '',
                                 },
-                                ['licenceNo']
+                                ['gender', 'followAdult', 'birthday']
                             )
                         );
                     } else {
-                        alert('没有其他成人乘客');
+                        // 切换儿童, 找到其余乘客,看有没有成人. 有的话才能切换儿童
+                        const adult = passengers.find(
+                            (passenger) =>
+                                passenger.id !== id &&
+                                passenger.ticketType === 'adult'
+                        );
+                        if (adult) {
+                            dispatch(
+                                updatePassenger(
+                                    id,
+                                    {
+                                        ticketType,
+                                        gender: '',
+                                        followAdult: adult.id,
+                                        birthday: '',
+                                    },
+                                    ['licenceNo']
+                                )
+                            );
+                        } else {
+                            alert('没有其他成人乘客');
+                        }
                     }
-                }
-                dispatch(hideMenu())
-            },
-            options: [{
-                    title: '成人票',
-                    value: 'adult',
-                    active: 'adult' === passenger.ticketType
+                    dispatch(hideMenu());
                 },
-                {
-                    title: '儿童票',
-                    value: 'child',
-                    active: 'child' === passenger.ticketType
-                }
-            ]
-        }))
+                options: [
+                    {
+                        title: '成人票',
+                        value: 'adult',
+                        active: 'adult' === passenger.ticketType,
+                    },
+                    {
+                        title: '儿童票',
+                        value: 'child',
+                        active: 'child' === passenger.ticketType,
+                    },
+                ],
+            })
+        );
     };
 }
 

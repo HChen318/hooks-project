@@ -2,6 +2,8 @@ import React, { useState, memo, useMemo, useRef, useEffect } from 'react';
 import useWidth from '../common/useWidth';
 import './Slider.css';
 
+
+
 const Slider = memo(function Slider(props) {
     const {
         title,
